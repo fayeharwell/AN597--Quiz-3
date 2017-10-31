@@ -1,0 +1,42 @@
+---
+title: 'Faye Harwell- AN597 Quiz #3'
+author: "Faye Harwell"
+date: "October 31, 2017"
+output: html_document
+---
+
+```{r}
+library(curl)
+library(dplyr)
+f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github.io/master/AN597_Fall17/zombies.csv")
+z <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = TRUE)
+z
+```
+
+#### Filter for just the nursing/medicine majors
+
+```{r}
+medstudents <- filter(z,z$major== "medicine/nursing")
+medstudents
+```
+
+#### Next, demonstrate the linear relationship between age/ years of education 
+
+```{r}
+age_n_years <-lm(medstudents$age~medstudents$years_of_education,medstudents)
+age_n_years
+summary(age_n_years)
+```
+
+#### Next, plot a scatterplot with a regression line that includes 95% confidence intervals. Eventually, you should color code the males in pink and females in blue
+
+```{r}
+library(ggplot2)
+Plot <- ggplot(data = medstudents, aes(x = years_of_education, y = age, color=gender))
+Color <- c("Female" = "blue", "Male" = "pink") 
+Plot <- Plot + scale_colour_manual(values = Color)
+Plot <- Plot + geom_point()
+Plot <- Plot + geom_smooth(method = "lm", formula = y ~ x, colour= "purple")
+
+Plot
+```
